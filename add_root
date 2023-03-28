@@ -7,7 +7,7 @@ import json
 def test_add_root_api():
    headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
    data = json.dumps({
-       "project_ID": project_ID,
+       "project_id": project_id,
        "item_type": item_type,
        "item": item,
        "inner_order": 1,
@@ -22,12 +22,13 @@ def test_add_root_api():
    print(result)
    print(status)
    assert status == 201
+   assert len(result[0]) > 0
 
 #2. Создание второго корневого элемента (те же параметры project_id, item_type, item) - Priority - high
 def test_add_2_root_api():
    headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
    data = json.dumps({
-       "project_ID": project_ID,
+       "project_id": project_id,
        "item_type": item_type,
        "item": item,
        "inner_order": 1,
@@ -48,7 +49,7 @@ def test_add_2_root_api():
 def test_add__root_another_item_api():
    headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
    data = json.dumps({
-       "project_ID": project_ID,
+       "project_id": project_id,
        "item_type": item_type,
        "item": "",
        "inner_order": 1,
@@ -68,7 +69,7 @@ def test_add__root_another_item_api():
 def test_add_root_upper_headers_api():
    headers = {'ACCEPT': 'APPLICATION/JSON', 'CONTENT-TYPE': 'APPLICATION/JSON'}
    data = json.dumps({
-       "project_ID": project_ID,
+       "project_id": project_id,
        "item_type": item_type,
        "item": item,
        "inner_order": 1,
@@ -88,7 +89,7 @@ def test_add_root_upper_headers_api():
 def test_add_root_upper_lower_headers_api():
    headers = {'ACCEPT': 'APPLICATION/JSON', 'Content-Type': 'application/json'}
    data = json.dumps({
-       "project_ID": project_ID,
+       "project_id": project_id,
        "item_type": item_type,
        "item": item,
        "inner_order": 1,
@@ -109,7 +110,7 @@ def test_add_root_another_fields_order_api():
    headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
    data = json.dumps({
        "item_type": item_type,
-       "project_ID": project_ID,
+       "project_id": project_id,
        "item": item,
        "inner_order": 1,
        "attributes": {}})
@@ -131,7 +132,7 @@ def test_add_root_another_fields_order_api():
 def test_add_root_upper_fields_api():
    headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
    data = json.dumps({
-       "PROJRCT_ID": project_ID,
+       "PROJRCT_id": project_id,
        "ITEM_TYPE": item_type,
        "ITEM": item,
        "inner_order": 1,
@@ -151,7 +152,7 @@ def test_add_root_upper_fields_api():
 def test_add_root_upper_lower_fields_api():
    headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
    data = json.dumps({
-       "PROJRCT_ID": project_ID,
+       "PROJECT_id": project_id,
        "ITEM_TYPE": item_type,
        "item": item,
        "inner_order": 1,
@@ -171,7 +172,7 @@ def test_add_root_upper_lower_fields_api():
 def test_add_root_upper_url_api():
    headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
    data = json.dumps({
-       "project_ID": project_ID,
+       "project_id": project_id,
        "item_type": item_type,
        "item": item,
        "inner_order": 1,
@@ -194,7 +195,7 @@ def test_add_root_upper_url_api():
 def test_add_root_wrong_method_negative_api():
    headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
    data = json.dumps({
-       "project_ID": project_ID,
+       "project_id": project_id,
        "item_type": item_type,
        "item": item,
        "inner_order": 1,
@@ -215,7 +216,7 @@ def test_add_root_wrong_method_negative_api():
 def test_add_root_wrong_URL_api():
    headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
    data = json.dumps({
-       "project_ID": project_ID,
+       "project_id": project_id,
        "item_type": item_type,
        "item": item,
        "inner_order": 1,
@@ -235,7 +236,7 @@ def test_add_root_wrong_URL_api():
 def test_add_root_wrong_endpoint_api():
    headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
    data = json.dumps({
-       "project_ID": project_ID,
+       "project_id": project_id,
        "item_type": item_type,
        "item": item,
        "inner_order": 1,
@@ -255,7 +256,7 @@ def test_add_root_wrong_endpoint_api():
 #14 Попытка запроса с указанием какого-либо item/project_id/item_type в Query params. Priority- medium
 
 #18.Попытка запроса без обязательного поля project_id в теле запроса. Priority- high
-def test_add_root_no_parent_id_api():
+def test_add_root_no_project_id_api():
    headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
    data = json.dumps({
        "item_type": item_type,
@@ -278,7 +279,7 @@ def test_add_root_no_parent_id_api():
 def test_add_root_no_item_type_api():
    headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
    data = json.dumps({
-       "project_ID": project_ID,
+       "project_id": project_id,
        "item": item,
        "inner_order": 1,
        "attributes": {}})
@@ -297,7 +298,7 @@ def test_add_root_no_item_type_api():
 def test_add_root_no_item_api():
    headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
    data = json.dumps({
-       "project_ID": project_ID,
+       "project_id": project_id,
        "item_type": item_type,
        "inner_order": 1,
        "attributes": {}})
@@ -316,7 +317,7 @@ def test_add_root_no_item_api():
 def test_add_root_wrong_project_id_format_api():
    headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
    data = json.dumps({
-       "project_ID": 123,
+       "project_id": 123,
        "item_type": item_type,
        "item": item,
        "inner_order": 1,
@@ -336,7 +337,7 @@ def test_add_root_wrong_project_id_format_api():
 def test_add_root_wrong_item_type_format_api():
    headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
    data = json.dumps({
-       "project_ID": project_ID,
+       "project_id": project_id,
        "item_type": 123,
        "item": item,
        "inner_order": 1,
@@ -356,7 +357,7 @@ def test_add_root_wrong_item_type_format_api():
 def test_add_root_wrong_item_format_api():
    headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
    data = json.dumps({
-       "project_ID": project_ID,
+       "project_id": project_id,
        "item_type": item_type,
        "item": 123,
        "inner_order": 1,
@@ -376,7 +377,7 @@ def test_add_root_wrong_item_format_api():
 def test_add_root_empty_project_id_api():
    headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
    data = json.dumps({
-       "": project_ID,
+       "": project_id,
        "item_type": item_type,
        "item": item,
        "inner_order": 1,
@@ -396,7 +397,7 @@ def test_add_root_empty_project_id_api():
 def test_add_root_empty_item_type_api():
    headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
    data = json.dumps({
-       "project_ID": project_ID,
+       "project_id": project_id,
        "": item_type,
        "item": item,
        "inner_order": 1,
@@ -416,7 +417,7 @@ def test_add_root_empty_item_type_api():
 def test_add_root_null_item_api():
    headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
    data = json.dumps({
-       "project_ID": project_ID,
+       "project_id": project_id,
        "item_type": item_type,
        "": item,
        "inner_order": 1,
@@ -456,7 +457,7 @@ def test_add_root_null_project_id_api():
 def test_add_root_empty_item_type_api():
    headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
    data = json.dumps({
-       "project_ID": project_ID,
+       "project_id": project_id,
        "item_type": "",
        "item": item,
        "inner_order": 1,
@@ -476,7 +477,7 @@ def test_add_root_empty_item_type_api():
 def test_add_root_null_item_api():
    headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
    data = json.dumps({
-       "project_ID": project_ID,
+       "project_id": project_id,
        "item_type": item_type,
        "item": "",
        "inner_order": 1,
@@ -496,7 +497,7 @@ def test_add_root_null_item_api():
 def test_add_root_null_item_api():
    headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
    data = json.dumps({
-       "project_ID": project_ID,
+       "project_id": project_id,
        "item_type": item_type,
        "item": "",
        "inner_order": "",
@@ -511,3 +512,4 @@ def test_add_root_null_item_api():
    print(result)
    print(status)
    assert status == 400
+
