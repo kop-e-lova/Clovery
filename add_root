@@ -1,0 +1,513 @@
+import requests
+from settings import *
+import json
+
+#Позитивные тесты POST_запрос метода add_root
+#1. Базовый позитивный тест POST с attributes - пустой json. Priority - high
+def test_add_root_api():
+   headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
+   data = json.dumps({
+       "project_ID": project_ID,
+       "item_type": item_type,
+       "item": item,
+       "inner_order": 1,
+       "attributes": {}})
+   res = requests.post(url, headers=headers, data=data)
+   status = res.status_code
+   result = ""
+   try:
+       result = res.json()
+   except json.decoder.JSONDecodeError:
+       result = res.text
+   print(result)
+   print(status)
+   assert status == 201
+
+#2. Создание второго корневого элемента (те же параметры project_id, item_type, item) - Priority - high
+def test_add_2_root_api():
+   headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
+   data = json.dumps({
+       "project_ID": project_ID,
+       "item_type": item_type,
+       "item": item,
+       "inner_order": 1,
+       "attributes": {}})
+   res = requests.post(url, headers=headers, data=data)
+   status = res.status_code
+   result = ""
+   try:
+       result = res.json()
+   except json.decoder.JSONDecodeError:
+       result = res.text
+   print(result)
+   print(status)
+   assert status == 201
+   assert result['id'][0] != result['id'][1]
+
+#3. Создание второго корневого элемента (item - другое значение). Priority - high
+def test_add__root_another_item_api():
+   headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
+   data = json.dumps({
+       "project_ID": project_ID,
+       "item_type": item_type,
+       "item": "",
+       "inner_order": 1,
+       "attributes": {}})
+   res = requests.post(url, headers=headers, data=data)
+   status = res.status_code
+   result = ""
+   try:
+       result = res.json()
+   except json.decoder.JSONDecodeError:
+       result = res.text
+   print(result)
+   print(status)
+   assert status == 201
+
+#4. Создание корневого элемента. Запрос с заголовками в верхнем регистре. Priority - medium
+def test_add_root_upper_headers_api():
+   headers = {'ACCEPT': 'APPLICATION/JSON', 'CONTENT-TYPE': 'APPLICATION/JSON'}
+   data = json.dumps({
+       "project_ID": project_ID,
+       "item_type": item_type,
+       "item": item,
+       "inner_order": 1,
+       "attributes": {}})
+   res = requests.post(url, headers=headers, data=data)
+   status = res.status_code
+   result = ""
+   try:
+       result = res.json()
+   except json.decoder.JSONDecodeError:
+       result = res.text
+   print(result)
+   print(status)
+   assert status == 201
+
+#5. Создание корневого элемента. Запрос с заголовками в верхнем и нижнем регистре. Priority - medium
+def test_add_root_upper_lower_headers_api():
+   headers = {'ACCEPT': 'APPLICATION/JSON', 'Content-Type': 'application/json'}
+   data = json.dumps({
+       "project_ID": project_ID,
+       "item_type": item_type,
+       "item": item,
+       "inner_order": 1,
+       "attributes": {}})
+   res = requests.post(url, headers=headers, data=data)
+   status = res.status_code
+   result = ""
+   try:
+       result = res.json()
+   except json.decoder.JSONDecodeError:
+       result = res.text
+   print(result)
+   print(status)
+   assert status == 201
+
+#6. Создание корневого элемента. Запрос с измененным порядком полей. Priority - medium
+def test_add_root_another_fields_order_api():
+   headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
+   data = json.dumps({
+       "item_type": item_type,
+       "project_ID": project_ID,
+       "item": item,
+       "inner_order": 1,
+       "attributes": {}})
+   res = requests.post(url, headers=headers, data=data)
+   status = res.status_code
+   result = ""
+   try:
+       result = res.json()
+   except json.decoder.JSONDecodeError:
+       result = res.text
+   print(result)
+   print(status)
+   assert status == 201
+
+#Негативные тесты
+
+
+#7. Создание корневого элемента. Запрос с ключами полей в теле в верхнем регистре. Priority - medium
+def test_add_root_upper_fields_api():
+   headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
+   data = json.dumps({
+       "PROJRCT_ID": project_ID,
+       "ITEM_TYPE": item_type,
+       "ITEM": item,
+       "inner_order": 1,
+       "attributes": {}})
+   res = requests.post(url, headers=headers, data=data)
+   status = res.status_code
+   result = ""
+   try:
+       result = res.json()
+   except json.decoder.JSONDecodeError:
+       result = res.text
+   print(result)
+   print(status)
+   assert status == 400
+
+#7.1 Создание корневого элемента. Запрос с полями в теле в верхнем и нижнем регистре. Priority - medium
+def test_add_root_upper_lower_fields_api():
+   headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
+   data = json.dumps({
+       "PROJRCT_ID": project_ID,
+       "ITEM_TYPE": item_type,
+       "item": item,
+       "inner_order": 1,
+       "attributes": {}})
+   res = requests.post(url, headers=headers, data=data)
+   status = res.status_code
+   result = ""
+   try:
+       result = res.json()
+   except json.decoder.JSONDecodeError:
+       result = res.text
+   print(result)
+   print(status)
+   assert status == 201
+
+#8. Создание корневого элемента. Запрос с URL в верхнем  регистре. Priority - medium
+def test_add_root_upper_url_api():
+   headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
+   data = json.dumps({
+       "project_ID": project_ID,
+       "item_type": item_type,
+       "item": item,
+       "inner_order": 1,
+       "attributes": {}})
+   res = requests.post(upper_url, headers=headers, data=data)
+   status = res.status_code
+   result = ""
+   try:
+       result = res.json()
+   except json.decoder.JSONDecodeError:
+       result = res.text
+   print(result)
+   print(status)
+   assert status == 201
+
+#9. Дублирование элементов - попытка отправить уже отправленный запрос с одинаковым телом. Priority- medium
+# Как проверить дублирование??? мы в теле не подаём id, а тело у всех одинаковое???
+
+#10. Попытка отправить запрос другим методом (сейчас можем проверить только через get)
+def test_add_root_wrong_method_negative_api():
+   headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
+   data = json.dumps({
+       "project_ID": project_ID,
+       "item_type": item_type,
+       "item": item,
+       "inner_order": 1,
+       "attributes": {}})
+   res = requests.get(url, headers=headers, data=data)
+   status = res.status_code
+   result = ""
+   try:
+       result = res.json()
+   except json.decoder.JSONDecodeError:
+       result = res.text
+   print(result)
+   print(status)
+   assert status == 405
+   """ по правилам должно быть 405, в коде предусмотрено 400 - потенциальный баг"""
+
+#11. Попытка отправить запрос с неверным URL
+def test_add_root_wrong_URL_api():
+   headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
+   data = json.dumps({
+       "project_ID": project_ID,
+       "item_type": item_type,
+       "item": item,
+       "inner_order": 1,
+       "attributes": {}})
+   res = requests.post(wrong_url, headers=headers, data=data)
+   status = res.status_code
+   result = ""
+   try:
+       result = res.json()
+   except json.decoder.JSONDecodeError:
+       result = res.text
+   print(result)
+   print(status)
+   assert status == 404
+
+#12. Попытка отправить запрос с неверным эндпоинтом
+def test_add_root_wrong_endpoint_api():
+   headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
+   data = json.dumps({
+       "project_ID": project_ID,
+       "item_type": item_type,
+       "item": item,
+       "inner_order": 1,
+       "attributes": {}})
+   res = requests.post(url_wrong_endpoint, headers=headers, data=data)
+   status = res.status_code
+   result = ""
+   try:
+       result = res.json()
+   except json.decoder.JSONDecodeError:
+       result = res.text
+   print(result)
+   print(status)
+   assert status == 404
+
+#13 Попытка запроса с указанием родительского id какого-либо элемента в Path. Priority- medium
+#14 Попытка запроса с указанием какого-либо item/project_id/item_type в Query params. Priority- medium
+
+#18.Попытка запроса без обязательного поля project_id в теле запроса. Priority- high
+def test_add_root_no_parent_id_api():
+   headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
+   data = json.dumps({
+       "item_type": item_type,
+       "item": item,
+       "inner_order": 1,
+       "attributes": {}})
+   res = requests.post(url, headers=headers, data=data)
+   status = res.status_code
+   result = ""
+   try:
+       result = res.json()
+   except json.decoder.JSONDecodeError:
+       result = res.text
+   print(result)
+   print(status)
+   assert status == 400
+
+#19.Попытка запроса без обязательного поля item_type в теле запроса. Priority- high
+
+def test_add_root_no_item_type_api():
+   headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
+   data = json.dumps({
+       "project_ID": project_ID,
+       "item": item,
+       "inner_order": 1,
+       "attributes": {}})
+   res = requests.post(url, headers=headers, data=data)
+   status = res.status_code
+   result = ""
+   try:
+       result = res.json()
+   except json.decoder.JSONDecodeError:
+       result = res.text
+   print(result)
+   print(status)
+   assert status == 400
+
+#20.Попытка запроса без обязательного поля item в теле запроса. Priority- high
+def test_add_root_no_item_api():
+   headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
+   data = json.dumps({
+       "project_ID": project_ID,
+       "item_type": item_type,
+       "inner_order": 1,
+       "attributes": {}})
+   res = requests.post(url, headers=headers, data=data)
+   status = res.status_code
+   result = ""
+   try:
+       result = res.json()
+   except json.decoder.JSONDecodeError:
+       result = res.text
+   print(result)
+   print(status)
+   assert status == 400
+
+#21.Попытка запроса с неверным форматом данных в поле project_id в теле запроса. Должен быть UUID. Передаем int Priority- high
+def test_add_root_wrong_project_id_format_api():
+   headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
+   data = json.dumps({
+       "project_ID": 123,
+       "item_type": item_type,
+       "item": item,
+       "inner_order": 1,
+       "attributes": {}})
+   res = requests.post(url, headers=headers, data=data)
+   status = res.status_code
+   result = ""
+   try:
+       result = res.json()
+   except json.decoder.JSONDecodeError:
+       result = res.text
+   print(result)
+   print(status)
+   assert status == 400
+
+#22.Попытка запроса с неверным форматом данных в поле item_type в теле запроса. Должен быть string. Передаем int Priority- high
+def test_add_root_wrong_item_type_format_api():
+   headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
+   data = json.dumps({
+       "project_ID": project_ID,
+       "item_type": 123,
+       "item": item,
+       "inner_order": 1,
+       "attributes": {}})
+   res = requests.post(url, headers=headers, data=data)
+   status = res.status_code
+   result = ""
+   try:
+       result = res.json()
+   except json.decoder.JSONDecodeError:
+       result = res.text
+   print(result)
+   print(status)
+   assert status == 400
+
+#23.Попытка запроса с неверным форматом данных в поле item в теле запроса. Должен быть string. Передаем int Priority- high
+def test_add_root_wrong_item_format_api():
+   headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
+   data = json.dumps({
+       "project_ID": project_ID,
+       "item_type": item_type,
+       "item": 123,
+       "inner_order": 1,
+       "attributes": {}})
+   res = requests.post(url, headers=headers, data=data)
+   status = res.status_code
+   result = ""
+   try:
+       result = res.json()
+   except json.decoder.JSONDecodeError:
+       result = res.text
+   print(result)
+   print(status)
+   assert status == 400
+
+#24.Попытка запроса с пустым значением project_ID. Priority- high
+def test_add_root_empty_project_id_api():
+   headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
+   data = json.dumps({
+       "": project_ID,
+       "item_type": item_type,
+       "item": item,
+       "inner_order": 1,
+       "attributes": {}})
+   res = requests.post(url, headers=headers, data=data)
+   status = res.status_code
+   result = ""
+   try:
+       result = res.json()
+   except json.decoder.JSONDecodeError:
+       result = res.text
+   print(result)
+   print(status)
+   assert status == 400
+
+#25.Попытка запроса с пустым значением item_type. Priority- high
+def test_add_root_empty_item_type_api():
+   headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
+   data = json.dumps({
+       "project_ID": project_ID,
+       "": item_type,
+       "item": item,
+       "inner_order": 1,
+       "attributes": {}})
+   res = requests.post(url, headers=headers, data=data)
+   status = res.status_code
+   result = ""
+   try:
+       result = res.json()
+   except json.decoder.JSONDecodeError:
+       result = res.text
+   print(result)
+   print(status)
+   assert status == 400
+
+#26.Попытка запроса с пустым значением item. Priority- high
+def test_add_root_null_item_api():
+   headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
+   data = json.dumps({
+       "project_ID": project_ID,
+       "item_type": item_type,
+       "": item,
+       "inner_order": 1,
+       "attributes": {}})
+   res = requests.post(url, headers=headers, data=data)
+   status = res.status_code
+   result = ""
+   try:
+       result = res.json()
+   except json.decoder.JSONDecodeError:
+       result = res.text
+   print(result)
+   print(status)
+   assert status == 400
+
+#34.Попытка запроса с значением null project_ID. Priority- high
+def test_add_root_null_project_id_api():
+   headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
+   data = json.dumps({
+       "project_id": "",
+       "item_type": item_type,
+       "item": item,
+       "inner_order": 1,
+       "attributes": {}})
+   res = requests.post(url, headers=headers, data=data)
+   status = res.status_code
+   result = ""
+   try:
+       result = res.json()
+   except json.decoder.JSONDecodeError:
+       result = res.text
+   print(result)
+   print(status)
+   assert status == 400
+
+#35.Попытка запроса с значением null item_type. Priority- high
+def test_add_root_empty_item_type_api():
+   headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
+   data = json.dumps({
+       "project_ID": project_ID,
+       "item_type": "",
+       "item": item,
+       "inner_order": 1,
+       "attributes": {}})
+   res = requests.post(url, headers=headers, data=data)
+   status = res.status_code
+   result = ""
+   try:
+       result = res.json()
+   except json.decoder.JSONDecodeError:
+       result = res.text
+   print(result)
+   print(status)
+   assert status == 400
+
+#36.Попытка запроса с значением null item. Priority- high
+def test_add_root_null_item_api():
+   headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
+   data = json.dumps({
+       "project_ID": project_ID,
+       "item_type": item_type,
+       "item": "",
+       "inner_order": 1,
+       "attributes": {}})
+   res = requests.post(url, headers=headers, data=data)
+   status = res.status_code
+   result = ""
+   try:
+       result = res.json()
+   except json.decoder.JSONDecodeError:
+       result = res.text
+   print(result)
+   print(status)
+   assert status == 400
+
+#37.Попытка запроса с значением null inner_order. Priority- high
+def test_add_root_null_item_api():
+   headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
+   data = json.dumps({
+       "project_ID": project_ID,
+       "item_type": item_type,
+       "item": "",
+       "inner_order": "",
+       "attributes": {}})
+   res = requests.post(url, headers=headers, data=data)
+   status = res.status_code
+   result = ""
+   try:
+       result = res.json()
+   except json.decoder.JSONDecodeError:
+       result = res.text
+   print(result)
+   print(status)
+   assert status == 400
