@@ -1,0 +1,569 @@
+import requests
+from settings import *
+import json
+
+#Позитивные тесты POST_запрос метода add_root
+#1. Базовый позитивный тест Создание дочернего элемента 2го уровня. Priority - high
+def test_add_child_1_level_base_api():
+   headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
+   data = json.dumps({
+       "project_id": project_id,
+       "item_type": item_type,
+       "item": item,
+       "inner_order": 1,
+       "attributes": {"name": "",
+                      "description": ""}})
+   res = requests.post(url + parent_id + add_descendant_endpoint, headers=headers, data=data)
+   status = res.status_code
+   result = ""
+   try:
+       result = res.json()
+   except json.decoder.JSONDecodeError:
+       result = res.text
+   print(result)
+   print(status)
+   assert status == 201
+   #Проверяем, что длина списка не равна нулю
+   assert len(result[0]) > 0
+   #Проверяем, что записанное значение id не нулевое
+   assert result["id"] != ""
+   print(result["id"])
+
+#2. Позитивный сценарий. Создание второго дочернего элемента 2го уровня у одного родительского элемента.
+# Priority - high
+def test_add_2child_1_level_api():
+   headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
+   data = json.dumps({
+       "project_id": project_id,
+       "item_type": item_type,
+       "item": item,
+       "inner_order": 1,
+       "attributes": {"name": "",
+                      "description": ""}})
+   res = requests.post(url + parent_id + add_descendant_endpoint, headers=headers, data=data)
+   status = res.status_code
+   result = ""
+   try:
+       result = res.json()
+   except json.decoder.JSONDecodeError:
+       result = res.text
+   print(result)
+   print(status)
+   assert status == 201
+   #Проверяем, что длина списка не равна нулю
+   assert len(result[0]) > 1
+   #Проверяем, что записанное значение id не нулевое, то есть элемент записан
+   assert result['id'][0] != ""
+   #Проверяем, что новый записанный элемент под другим id (не совпадающий с первым)
+   assert result['id'][0] != result['id'][1]
+   print(result["id"][0])
+
+#3. Позитивный сценарий. Создание первого дочернего элемента 3-го уровня у одного родительского элемента
+# Priority - high
+def test_add_1_child_3_level_api():
+   headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
+   data = json.dumps({
+       "project_id": project_id,
+       "item_type": item_type,
+       "item": item,
+       "inner_order": 1,
+       "attributes": {"name": "",
+                      "description": ""}})
+   res = requests.post(url + parent_id + add_descendant_endpoint, headers=headers, data=data)
+   status = res.status_code
+   result = ""
+   try:
+       result = res.json()
+   except json.decoder.JSONDecodeError:
+       result = res.text
+   print(result)
+   print(status)
+   assert status == 201
+   #Проверяем, что длина списка не равна нулю
+   assert len(result[0]) > 1
+   #Проверяем, что записанное значение id не пустое, то есть элемент записан
+   assert result["id"] != ""
+   print(result["id"])
+
+#4. Позитивный сценарий. Создание второго дочернего элемента 3-го уровня у одного родительского элемента
+# Priority - high
+def test_add_2_child_3_level_api():
+   headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
+   data = json.dumps({
+       "project_id": project_id,
+       "item_type": item_type,
+       "item": item,
+       "inner_order": 1,
+       "attributes": {"name": "",
+                      "description": ""}})
+   res = requests.post(url + child_1_2_level_id + add_descendant_endpoint, headers=headers, data=data)
+   status = res.status_code
+   result = ""
+   try:
+       result = res.json()
+   except json.decoder.JSONDecodeError:
+       result = res.text
+   print(result)
+   print(status)
+   assert status == 201
+   #Проверяем, что длина списка не равна нулю
+   assert len(result[0]) > 1
+   #Проверяем, что записанное значение id не пустое, то есть элемент записан
+   # Проверяем, что новый записанный элемент под другим id (не совпадающий с первым)
+   assert result["id"][0] != ""
+   assert result['id'][0] != result['id'][1]
+   print(result["id"])
+
+#5. Позитивный сценарий. Создание дочернего элемента 4го уровня
+# Priority - high
+def test_add_1_child_4_level_api():
+   headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
+   data = json.dumps({
+       "project_id": project_id,
+       "item_type": item_type,
+       "item": item,
+       "inner_order": 1,
+       "attributes": {"name": "",
+                      "description": ""}})
+   res = requests.post(url + child_1_3_level_id + add_parent_endpoint, headers=headers, data=data)
+   status = res.status_code
+   result = ""
+   try:
+       result = res.json()
+   except json.decoder.JSONDecodeError:
+       result = res.text
+   print(result)
+   print(status)
+   assert status == 201
+   #Проверяем, что длина списка не равна нулю
+   assert len(result[0]) > 0
+   #Проверяем, что записанное значение id не пустое, то есть элемент записан
+   assert result["id"][0] != ""
+   print(result["id"])
+
+#6. Позитивный сценарий. Создание второго дочернего элемента 4го уровня у одного родительского элемента
+# Priority - high
+def test_add_2_child_4_level_api():
+   headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
+   data = json.dumps({
+       "project_id": project_id,
+       "item_type": item_type,
+       "item": item,
+       "inner_order": 1,
+       "attributes": {"name": "",
+                      "description": ""}})
+   res = requests.post(url + child_1_3_level_id + add_descendant_endpoint, headers=headers, data=data)
+   status = res.status_code
+   result = ""
+   try:
+       result = res.json()
+   except json.decoder.JSONDecodeError:
+       result = res.text
+   print(result)
+   print(status)
+   assert status == 201
+   #Проверяем, что длина списка не равна нулю
+   assert len(result[0]) > 1
+   #Проверяем, что записанное значение id не пустое, то есть элемент записан
+   # Проверяем, что новый записанный элемент под другим id (не совпадающий с первым)
+   assert result["id"][0] != ""
+   assert result['id'][0] != result['id'][1]
+   print(result["id"])
+
+#Негативные сценарии. Priority high.
+#16. Попытка запроса без указания родительского id в Path
+def test_add_child_negative_no_parent_id_api():
+   headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
+   data = json.dumps({
+       "project_id": project_id,
+       "item_type": item_type,
+       "item": item,
+       "inner_order": 1,
+       "attributes": {"name": "",
+                      "description": ""}})
+   res = requests.post(url + add_descendant_endpoint, headers=headers, data=data)
+   status = res.status_code
+   result = ""
+   try:
+       result = res.json()
+   except json.decoder.JSONDecodeError:
+       result = res.text
+   print(result)
+   assert status == 404
+
+#17. Попытка запроса с указанием родительского id неверного формата в Path
+def test_add_child_negative_parent_id_wrong_format_api():
+   headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
+   data = json.dumps({
+       "project_id": project_id,
+       "item_type": item_type,
+       "item": item,
+       "inner_order": 1,
+       "attributes": {"name": "",
+                      "description": ""}})
+   res = requests.post(url + parent_id_wrong_format + add_descendant_endpoint, headers=headers, data=data)
+   status = res.status_code
+   result = ""
+   try:
+       result = res.json()
+   except json.decoder.JSONDecodeError:
+       result = res.text
+   print(result)
+   assert status == 404
+
+#18. Попытка запроса с указанием несуществующего id в качестве родительского в Path
+def test_add_child_negative_wrong_parent_id__api():
+   headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
+   data = json.dumps({
+       "project_id": project_id,
+       "item_type": item_type,
+       "item": item,
+       "inner_order": 1,
+       "attributes": {"name": "",
+                      "description": ""}})
+   res = requests.post(url + wrong_parent_id + add_descendant_endpoint, headers=headers, data=data)
+   status = res.status_code
+   result = ""
+   try:
+       result = res.json()
+   except json.decoder.JSONDecodeError:
+       result = res.text
+   print(result)
+   assert status == 400
+
+#25. Попытка запроса с указанием поля project_id в теле запроса, не соответствующего родительскому элементу
+def test_add_child_negative_wrong_project_id__api():
+   headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
+   data = json.dumps({
+       "project_id": wrong_project_id,
+       "item_type": item_type,
+       "item": item,
+       "inner_order": 1,
+       "attributes": {"name": "",
+                      "description": ""}})
+   res = requests.post(url + parent_id + add_descendant_endpoint, headers=headers, data=data)
+   status = res.status_code
+   result = ""
+   try:
+       result = res.json()
+   except json.decoder.JSONDecodeError:
+       result = res.text
+   print(result)
+   assert status == 400
+
+#26. Попытка запроса с указанием поля item_type в теле запроса, не соответствующего родительскому
+def test_add_child_negative_wrong_item_type_api():
+   headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
+   data = json.dumps({
+       "project_id": project_id,
+       "item_type": wrong_item_type,
+       "item": item,
+       "inner_order": 1,
+       "attributes": {"name": "",
+                      "description": ""}})
+   res = requests.post(url + parent_id + add_descendant_endpoint, headers=headers, data=data)
+   status = res.status_code
+   result = ""
+   try:
+       result = res.json()
+   except json.decoder.JSONDecodeError:
+       result = res.text
+   print(result)
+   assert status == 400
+
+#27. Попытка запроса с указанием поля item в теле запроса, не соответствующего родительскому
+def test_add_child_negative_wrong_item_api():
+   headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
+   data = json.dumps({
+       "project_id": project_id,
+       "item_type": item_type,
+       "item": wrong_item,
+       "inner_order": 1,
+       "attributes": {"name": "",
+                      "description": ""}})
+   res = requests.post(url + parent_id + add_descendant_endpoint, headers=headers, data=data)
+   status = res.status_code
+   result = ""
+   try:
+       result = res.json()
+   except json.decoder.JSONDecodeError:
+       result = res.text
+   print(result)
+   assert status == 400
+
+#38. Попытка запроса без обязательного поля project_id в теле запроса
+def test_add_child_negative_no_project_id_api():
+   headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
+   data = json.dumps({
+       "item_type": item_type,
+       "item": item,
+       "inner_order": 1,
+       "attributes": {"name": "",
+                      "description": ""}})
+   res = requests.post(url + parent_id + add_descendant_endpoint, headers=headers, data=data)
+   status = res.status_code
+   result = ""
+   try:
+       result = res.json()
+   except json.decoder.JSONDecodeError:
+       result = res.text
+   print(result)
+   assert status == 400
+
+#39. Попытка запроса без обязательного поля item_type в теле запроса
+def test_add_child_negative_no_item_type_api():
+   headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
+   data = json.dumps({
+       "project_id": project_id,
+       "item": item,
+       "inner_order": 1,
+       "attributes": {"name": "",
+                      "description": ""}})
+   res = requests.post(url + parent_id + add_descendant_endpoint, headers=headers, data=data)
+   status = res.status_code
+   result = ""
+   try:
+       result = res.json()
+   except json.decoder.JSONDecodeError:
+       result = res.text
+   print(result)
+   assert status == 400
+
+#40.Попытка запроса без обязательного поля item в теле запроса
+def test_add_child_negative_no_item_api():
+   headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
+   data = json.dumps({
+       "project_id": project_id,
+       "item_type": item_type,
+       "inner_order": 1,
+       "attributes": {"name": "",
+                      "description": ""}})
+   res = requests.post(url + parent_id + add_descendant_endpoint, headers=headers, data=data)
+   status = res.status_code
+   result = ""
+   try:
+       result = res.json()
+   except json.decoder.JSONDecodeError:
+       result = res.text
+   print(result)
+   assert status == 400
+
+#41.Попытка запроса с неверным форматом данных в поле project_id в теле запроса
+def test_add_child_negative_wrong_format_project_id_api():
+   headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
+   data = json.dumps({
+       "project_id": 123,
+       "item_type": item_type,
+       "item": item,
+       "inner_order": 1,
+       "attributes": {"name": "",
+                      "description": ""}})
+   res = requests.post(url + parent_id + add_descendant_endpoint, headers=headers, data=data)
+   status = res.status_code
+   result = ""
+   try:
+       result = res.json()
+   except json.decoder.JSONDecodeError:
+       result = res.text
+   print(result)
+   assert status == 400
+
+#42. Попытка запроса с неверным форматом данных в поле item_type в теле запроса
+def test_add_child_negative_wrong_format_item_type_api():
+   headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
+   data = json.dumps({
+       "project_id": project_id,
+       "item_type": 123,
+       "item": item,
+       "inner_order": 1,
+       "attributes": {"name": "",
+                      "description": ""}})
+   res = requests.post(url + parent_id + add_descendant_endpoint, headers=headers, data=data)
+   status = res.status_code
+   result = ""
+   try:
+       result = res.json()
+   except json.decoder.JSONDecodeError:
+       result = res.text
+   print(result)
+   assert status == 400
+
+#43. Попытка запроса с неверным форматом данных в поле item в теле запроса
+def test_add_child_negative_wrong_format_item_api():
+   headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
+   data = json.dumps({
+       "project_id": project_id,
+       "item_type": item_type,
+       "item": 123,
+       "inner_order": 1,
+       "attributes": {"name": "",
+                      "description": ""}})
+   res = requests.post(url + parent_id + add_descendant_endpoint, headers=headers, data=data)
+   status = res.status_code
+   result = ""
+   try:
+       result = res.json()
+   except json.decoder.JSONDecodeError:
+       result = res.text
+   print(result)
+   assert status == 400
+
+#44. Попытка запроса с пустым значением в поле project_id в теле запроса
+def test_add_child_negative_empty_project_id_api():
+   headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
+   data = json.dumps({
+       "project_id": "",
+       "item_type": item_type,
+       "item": item,
+       "inner_order": 1,
+       "attributes": {"name": "",
+                      "description": ""}})
+   res = requests.post(url + parent_id + add_descendant_endpoint, headers=headers, data=data)
+   status = res.status_code
+   result = ""
+   try:
+       result = res.json()
+   except json.decoder.JSONDecodeError:
+       result = res.text
+   print(result)
+   assert status == 400
+
+#45. Попытка запроса с пустым значением в поле item_type в теле запроса
+def test_add_child_negative_empty_item_type_api():
+   headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
+   data = json.dumps({
+       "project_id": project_id,
+       "item_type": "",
+       "item": item,
+       "inner_order": 1,
+       "attributes": {"name": "",
+                      "description": ""}})
+   res = requests.post(url + parent_id + add_descendant_endpoint, headers=headers, data=data)
+   status = res.status_code
+   result = ""
+   try:
+       result = res.json()
+   except json.decoder.JSONDecodeError:
+       result = res.text
+   print(result)
+   assert status == 400
+
+#46. Попытка запроса с пустым значением в поле item в теле запроса
+def test_add_child_negative_empty_item_api():
+   headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
+   data = json.dumps({
+       "project_id": project_id,
+       "item_type": item_type,
+       "item": "",
+       "inner_order": 1,
+       "attributes": {"name": "",
+                      "description": ""}})
+   res = requests.post(url + parent_id + add_descendant_endpoint, headers=headers, data=data)
+   status = res.status_code
+   result = ""
+   try:
+       result = res.json()
+   except json.decoder.JSONDecodeError:
+       result = res.text
+   print(result)
+   assert status == 400
+
+#47. Попытка запроса со значением Null в поле project_id в теле запроса
+def test_add_child_negative_None_project_id_api():
+   headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
+   data = json.dumps({
+       "project_id": None,
+       "item_type": item_type,
+       "item": item,
+       "inner_order": 1,
+       "attributes": {"name": "",
+                      "description": ""}})
+   res = requests.post(url + parent_id + add_descendant_endpoint, headers=headers, data=data)
+   status = res.status_code
+   result = ""
+   try:
+       result = res.json()
+   except json.decoder.JSONDecodeError:
+       result = res.text
+   print(result)
+   assert status == 400
+
+#48. Попытка запроса со значением Null в поле item_type тела запроса
+def test_add_child_negative_None_item_type_api():
+   headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
+   data = json.dumps({
+       "project_id": project_id,
+       "item_type": None,
+       "item": item,
+       "inner_order": 1,
+       "attributes": {"name": "",
+                      "description": ""}})
+   res = requests.post(url + parent_id + add_descendant_endpoint, headers=headers, data=data)
+   status = res.status_code
+   result = ""
+   try:
+       result = res.json()
+   except json.decoder.JSONDecodeError:
+       result = res.text
+   print(result)
+   assert status == 400
+
+#49. Попытка запроса со значением Null в поле item тела запроса
+def test_add_child_negative_None_item_api():
+   headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
+   data = json.dumps({
+       "project_id": project_id,
+       "item_type": item_type,
+       "item": None,
+       "inner_order": 1,
+       "attributes": {"name": "",
+                      "description": ""}})
+   res = requests.post(url + parent_id + add_descendant_endpoint, headers=headers, data=data)
+   status = res.status_code
+   result = ""
+   try:
+       result = res.json()
+   except json.decoder.JSONDecodeError:
+       result = res.text
+   print(result)
+   assert status == 400
+
+#50. Попытка запроса с пустым значением в поле inner_order тела запроса
+def test_add_child_empty_inner_order_api():
+   headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
+   data = json.dumps({
+       "project_id": project_id,
+       "item_type": item_type,
+       "item": item,
+       "inner_order": "1",
+       "attributes": {"name": "",
+                      "description": ""}})
+   res = requests.post(url + parent_id + add_descendant_endpoint, headers=headers, data=data)
+   status = res.status_code
+   result = ""
+   try:
+       result = res.json()
+   except json.decoder.JSONDecodeError:
+       result = res.text
+   print(result)
+   assert status == 201
+
+#50. Попытка запроса с пустым значением в поле inner_order тела запроса
+def test_add_child_empty_123_inner_order_api():
+   headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
+   data = json.dumps({
+       "project_id": project_id,
+       "item_type": item_type,
+       "item": item,
+       "inner_order": "123",
+       "attributes": {"name": "",
+                      "description": ""}})
+   res = requests.post(url + parent_id + add_descendant_endpoint, headers=headers, data=data)
+   status = res.status_code
+   result = ""
+   try:
+       result = res.json()
+   except json.decoder.JSONDecodeError:
+       result = res.text
+   print(result)
+   assert status == 201
