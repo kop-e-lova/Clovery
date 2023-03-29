@@ -1,0 +1,324 @@
+import requests
+from settings import *
+import json
+
+
+#GET_запрос
+
+#1 Позитивный сценарий. Получение пустой оргструктуры без задания item в Query params. Priority - high
+def get_tree_empty_api():
+
+    headers = {'accept': 'application/json'}
+    res = requests.get(url + get_tree_endpoint, headers=headers)
+    status = res.status_code
+    result = ""
+    try:
+        result = res.json()
+    except json.decoder.JSONDecodeError:
+        result = res.text
+    assert status == 200
+    print(result)
+    assert len(result[0]) > 0
+    #assert result['id'][0] == 0
+    #assert result['id'][0] not in result
+    #print(result['id'][0])
+
+#2 Позитивный сценарий. Получение всех элементов не пустой оргструктуры с созданными элементами,
+# без задания item в Query params. Priority - high
+def get_tree_not_empty_api():
+
+    headers = {'accept': 'application/json'}
+    res = requests.get(url + get_tree_endpoint, headers=headers)
+    status = res.status_code
+    result = ""
+    try:
+        result = res.json()
+    except json.decoder.JSONDecodeError:
+        result = res.text
+    assert status == 200
+    print(result)
+    assert len(result[0]) > 0
+
+# 3 Позитивный сценарий. Получение всех элементов оргструктуры при задании значения item в Query params. Priority - high
+def test_get_tree_item_api():
+    headers = {'accept': 'application/json'}
+    params = {'item': item}
+    res = requests.get(url + get_tree_endpoint, headers=headers, params=params)
+    status = res.status_code
+    result = ""
+    try:
+        result = res.json()
+    except json.decoder.JSONDecodeError:
+        result = res.text
+    assert status == 200
+    print(result)
+    assert len(result[0]) > 0
+    assert result['item'] == 'item'
+    #Нужны ли assert на проверку всех  полученнных в ответе полей
+
+#4. Позитивный сценарий. Отправка запроса с заголовками в верхем регистре. Priority - medium
+def test_get_tree_upper_headers_api():
+    headers = {'ACCEPT': 'APPLICATION/JSON'}
+    res = requests.get(url + get_tree_endpoint, headers=headers)
+    status = res.status_code
+    result = ""
+    try:
+        result = res.json()
+    except json.decoder.JSONDecodeError:
+        result = res.text
+    assert status == 200
+    print(result)
+    assert len(result[0]) > 0
+
+#5. Позитивный сценарий. Отправка запроса с заголовками в верхем и нижнем регистре. Priority - medium
+def test_get_tree_upper_headers_api():
+    headers = {'accept': 'APPLICATION/JSON'}
+    res = requests.get(url + get_tree_endpoint, headers=headers)
+    status = res.status_code
+    result = ""
+    try:
+        result = res.json()
+    except json.decoder.JSONDecodeError:
+        result = res.text
+    assert status == 200
+    print(result)
+    assert len(result[0]) > 0
+
+# Негативные сценарии. Priority - medium
+
+#6.Отправка запроса с параметром item в Query params в верхем и нижнем регистре. Priority Medium
+def test_get_tree_negative_upper_item_api():
+    headers = {'accept': 'application/json'}
+    params = {'ITEM': item}
+    res = requests.get(url + get_tree_endpoint, headers=headers, params=params)
+    status = res.status_code
+    result = ""
+    try:
+        result = res.json()
+    except json.decoder.JSONDecodeError:
+        result = res.text
+    assert status == 200
+    print(result)
+    assert len(result[0]) > 0
+    assert result['item'] == 'item'
+    #Нужны ли assert на проверку всех  полученнных в ответе полей
+
+#7.Попытка запроса неверным методом (post, put, delete). Priority Medium
+def get_tree_negative_wrong_method_api():
+
+    headers = {'accept': 'application/json'}
+    res = requests.post(url + get_tree_endpoint, headers=headers)
+    status = res.status_code
+    result = ""
+    try:
+        result = res.json()
+    except json.decoder.JSONDecodeError:
+        result = res.text
+    assert status == 405
+    print(result)
+
+#8. Отправка запроса с url в верхем регистре. Priority Medium
+def get_tree_negative_upper_url_api():
+
+    headers = {'accept': 'application/json'}
+    res = requests.post(upper_url + get_tree_endpoint, headers=headers)
+    status = res.status_code
+    result = ""
+    try:
+        result = res.json()
+    except json.decoder.JSONDecodeError:
+        result = res.text
+    assert status == 404
+    print(result)
+
+#9. Попытка запроса с неверным url. Priority Medium
+def get_tree_negative_wrong_upper_url_api():
+
+    headers = {'accept': 'application/json'}
+    res = requests.post(wrong_url + get_tree_endpoint, headers=headers)
+    status = res.status_code
+    result = ""
+    try:
+        result = res.json()
+    except json.decoder.JSONDecodeError:
+        result = res.text
+    assert status == 404
+    print(result)
+
+#10. Попытка запроса с неверным endpoint. Priority Medium
+def get_tree_negative_wrong_endpoint_api():
+
+    headers = {'accept': 'application/json'}
+    res = requests.post(url + add_parent_endpoint, headers=headers)
+    status = res.status_code
+    result = ""
+    try:
+        result = res.json()
+    except json.decoder.JSONDecodeError:
+        result = res.text
+    assert status == 404
+    print(result)
+
+#11. Попытка запроса с указанием item в Path. Priority Medium
+def get_tree_empty_negative_item_in_path_api():
+
+    headers = {'accept': 'application/json'}
+    res = requests.post(wrong_url + get_tree_endpoint + item, headers=headers)
+    status = res.status_code
+    result = ""
+    try:
+        result = res.json()
+    except json.decoder.JSONDecodeError:
+        result = res.text
+    assert status == 404
+    print(result)
+
+#12. Попытка запроса с указанием в Query params значения item неверного формата. Priority Medium
+def test_get_tree_item_negative_wrong_item_format_api():
+    headers = {'accept': 'application/json'}
+    params = {'item': 123}
+    res = requests.get(url + get_tree_endpoint, headers=headers, params=params)
+    status = res.status_code
+    result = ""
+    try:
+        result = res.json()
+    except json.decoder.JSONDecodeError:
+        result = res.text
+    assert status == 400
+    assert status == 404
+
+#13. Попытка запроса с указанием в Query params несуществующего значения item. Priority Medium
+def test_get_tree_item_negative_wrong_item_format_api():
+    headers = {'accept': 'application/json'}
+    params = {'item': "wrong_string"}
+    res = requests.get(url + get_tree_endpoint, headers=headers, params=params)
+    status = res.status_code
+    result = ""
+    try:
+        result = res.json()
+    except json.decoder.JSONDecodeError:
+        result = res.text
+    assert status == 400
+    assert status == 404
+
+#14. Попытка запроса с указанием в Query params пустого значения item. Priority Medium
+def test_get_tree_item_negative_null_item_api():
+    headers = {'accept': 'application/json'}
+    params = {'item': ""}
+    res = requests.get(url + get_tree_endpoint, headers=headers, params=params)
+    status = res.status_code
+    result = ""
+    try:
+        result = res.json()
+    except json.decoder.JSONDecodeError:
+        result = res.text
+    assert status == 400
+    assert status == 404
+
+#15. Попытка запроса с указанием значения item в json в теле запроса. Priority Medium
+def test_get_tree_item_negative_item_in_body_api():
+    headers = {'accept': 'application/json'}
+    data = {'item': item}
+    res = requests.get(url + get_tree_endpoint, headers=headers, data=data)
+    status = res.status_code
+    result = ""
+    try:
+        result = res.json()
+    except json.decoder.JSONDecodeError:
+        result = res.text
+    assert status == 400
+
+#16. Попытка запроса с указанием какого-либо id/project_id/item_type в Query params. Priority Medium
+def test_get_tree_item_negative_null_item_api():
+    headers = {'accept': 'application/json'}
+    params = {'item': item,
+              'project_id': project_id}
+    res = requests.get(url + get_tree_endpoint, headers=headers, params=params)
+    status = res.status_code
+    result = ""
+    try:
+        result = res.json()
+    except json.decoder.JSONDecodeError:
+        result = res.text
+    assert status == 400
+
+#17. Попытка запроса с неверным типом данных в Headers (Accept). Priority Medium
+def test_get_tree_item_negative_wrong_headers_api():
+    headers = {'accept': 'text/html'}
+    params = {'item': item}
+    res = requests.get(url + get_tree_endpoint, headers=headers, params=params)
+    status = res.status_code
+    result = ""
+    try:
+        result = res.json()
+    except json.decoder.JSONDecodeError:
+        result = res.text
+    assert status == 400
+
+#18. Попытка запроса без заголовков. Priority Medium
+def test_get_tree_item_negative_empty_headers_api():
+    headers = {'accept': ''}
+    params = {'item': item}
+    res = requests.get(url + get_tree_endpoint, headers=headers, params=params)
+    status = res.status_code
+    result = ""
+    try:
+        result = res.json()
+    except json.decoder.JSONDecodeError:
+        result = res.text
+    assert status == 400
+
+#19. Попытка запроса с  item в заголовках запроса. Priority Medium
+def test_get_tree_item_negative_item_in_headers_api():
+    headers = {'accept': 'application/json', 'item': item}
+    res = requests.get(url + get_tree_endpoint, headers=headers)
+    status = res.status_code
+    result = ""
+    try:
+        result = res.json()
+    except json.decoder.JSONDecodeError:
+        result = res.text
+    assert status == 400
+
+#20. Попытка запроса с отправкой json/text/html/xml/js в теле запроса. Priority Medium
+def test_get_tree_item_negative_with_json_body_api():
+    headers = {'accept': 'application/json'}
+    params = {'item': item}
+    data = json.dumps({
+       "some_data": "some data"})
+    res = requests.get(url + get_tree_endpoint, headers=headers, params=params, data=data)
+    status = res.status_code
+    result = ""
+    try:
+        result = res.json()
+    except json.decoder.JSONDecodeError:
+        result = res.text
+    assert status == 400
+
+#21. Попытка запроса с заданием path какого-либо элемента в Query params. Priority Medium
+def test_get_tree_item_negative_item_in_body_api():
+    headers = {'accept': 'application/json'}
+    params = {'item': item,
+              'get_tree_endpoint': get_tree_endpoint}
+    res = requests.get(url, headers=headers, params=params)
+    status = res.status_code
+    result = ""
+    try:
+        result = res.json()
+    except json.decoder.JSONDecodeError:
+        result = res.text
+    assert status == 400
+
+#22. Попытка запроса с заданием id какого-либо элемента в Query params. Priority Medium
+def test_get_tree_item_negative_item_is_in_query_params_api():
+    headers = {'accept': 'application/json'}
+    params = {'item': item,
+              'parent_id': parent_id}
+    res = requests.get(url + get_tree_endpoint, headers=headers, params=params)
+    status = res.status_code
+    result = ""
+    try:
+        result = res.json()
+    except json.decoder.JSONDecodeError:
+        result = res.text
+    assert status == 400
